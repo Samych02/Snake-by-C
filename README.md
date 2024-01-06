@@ -22,7 +22,7 @@ Before compiling, make sure you have installed the following dependencies:
     ```
     On Ubuntu: sudo apt-get install libsdl2-dev
     On Mac: brew install sdl
-    On Windows in mingw64: pacman -S mingw64mingw-w64-x86_64-SDL2
+    On Windows in mingw64: pacman -S mingw-w64-x86_64-SDL2
     ```
 
 Then compile the game, by typing 'make' in the terminal inside the project folder.
