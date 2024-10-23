@@ -26,27 +26,21 @@ typedef struct
     int y;
 } Position;
 
-// typedef struct NodePosition
-// {
-//     Position position;
-//     struct NodePosition* next;
-// } NodePosition;
-
 typedef union NodeType
 {
-    Position* position;
+    Position position;
     Snake* snake;
 } NodeType;
 
 // Thank you cs50 for teaching me this
-typedef struct Node
+struct Node
 {
     NodeType data;
     Node* next;
-} Node;
+};
 
 // I decided to remove the length field and use a method to get the list's size to reduce the risk of error when manually incrementing
-typedef struct Snake
+struct Snake
 {
     int id;
     Color color;
@@ -57,14 +51,7 @@ typedef struct Snake
     Position tail;
     Node* body;
     int final_score;
-} Snake;
-
-// // The order matters
-// typedef struct NodeSnake
-// {
-//     Snake snake;
-//     struct NodeSnake* next;
-// } NodeSnake;
+};
 
 typedef struct
 {

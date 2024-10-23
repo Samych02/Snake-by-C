@@ -39,6 +39,17 @@ Node* create_linked_list()
     return head;
 }
 
+Node* free_linked_list(Node* head)
+{
+    while (head != NULL)
+    {
+        Node* tmp = head;
+        head = head->next;
+        free(tmp);
+    }
+    return NULL;
+}
+
 int get_list_size(const Node* head)
 {
     if (head == NULL) return 0;

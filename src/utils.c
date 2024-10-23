@@ -44,9 +44,11 @@ void print_snake(const Snake* snake)
     const Node* tmp = snake->body;
     printf("----\n");
     printf("length: %i\n", get_list_size(snake->body));
+    printf("direction: %i\n", snake->direction);
+
     while (tmp != NULL)
     {
-        printf("x: %i | y: %i\n", tmp->data.position->x, tmp->data.position->y);
+        printf("x: %i | y: %i\n", tmp->data.position.x, tmp->data.position.y);
         tmp = tmp->next;
     }
     printf("----\n");
