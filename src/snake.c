@@ -13,7 +13,7 @@
 
 Position get_snake_head_position(const Node* body)
 {
-    return get_list_tail(body).position;
+    return get_list_head(body).position;
 }
 
 // Get a snake's futur position in x number of steps in specific direction
@@ -49,7 +49,8 @@ void generate_random_starting_position_and_direction(Snake* snake)
 
     NodeType data;
     data.position = (Position){rand() % BOARD_LENGTH, rand() % BOARD_LENGTH};
-    snake->body = front_insert(snake->body, &data);
+    // data.snake = NULL;
+    snake->body = back_insert(snake->body, &data);
 
     const int snake_initial_length = 3;
     // We will construct the rest of the body using get_future_position with the opposite snake direction
@@ -62,7 +63,8 @@ void generate_random_starting_position_and_direction(Snake* snake)
     {
         const Position tmp = get_future_position(get_snake_head_position(snake->body), snake->direction xor 1, i);
         data.position = tmp;
-        snake->body = front_insert(snake->body, &data);
+        // data.snake = NULL;
+        snake->body = back_insert(snake->body, &data);
     }
 }
 
@@ -79,12 +81,14 @@ bool validate_generated_starting_position_and_direction(const Game* game, Snake*
             {
                 if (
                     compare_position(&border_node_tmp->data.position, &snake_body_node_tmp->data.position)
-                    // ||
-                    // compare_position(border_node_tmp->data.position,
-                    //                  &get_future_position(get_snake_head_position(snake->body), snake->direction, 1))
-                    // ||
-                    // compare_position(border_node_tmp->data.position,
-                    //                  &get_future_position(get_snake_head_position(snake->body), snake->direction, 2))
+                    ||
+                    compare_position_by_value(border_node_tmp->data.position,
+                                              get_future_position(get_snake_head_position(snake->body),
+                                                                  snake->direction, 1))
+                    ||
+                    compare_position_by_value(border_node_tmp->data.position,
+                                              get_future_position(get_snake_head_position(snake->body),
+                                                                  snake->direction, 2))
                 )
                 {
                     snake->body = free_linked_list(snake->body);
@@ -106,12 +110,14 @@ bool validate_generated_starting_position_and_direction(const Game* game, Snake*
             {
                 if (
                     compare_position(&obstacle_node_tmp->data.position, &snake_body_node_tmp->data.position)
-                    // ||
-                    // compare_position(obstacle_node_tmp->data.position,
-                    //                  &get_future_position(get_snake_head_position(snake->body), snake->direction, 1))
-                    // ||
-                    // compare_position(obstacle_node_tmp->data.position,
-                    //                  &get_future_position(get_snake_head_position(snake->body), snake->direction, 2))
+                    ||
+                    compare_position_by_value(obstacle_node_tmp->data.position,
+                                              get_future_position(get_snake_head_position(snake->body),
+                                                                  snake->direction, 1))
+                    ||
+                    compare_position_by_value(obstacle_node_tmp->data.position,
+                                              get_future_position(get_snake_head_position(snake->body),
+                                                                  snake->direction, 2))
                 )
                 {
                     snake->body = free_linked_list(snake->body);
@@ -199,7 +205,6 @@ bool allow_snake_movement(Snake* snake, const double speed)
     return true;
 }
 
-
 // moving snakes
 void move_snakes(const Game* game)
 {
@@ -216,19 +221,18 @@ void move_snakes(const Game* game)
         // saving current head position
         Position tmp_position = get_snake_head_position(snake_body_node_tmp);
         // Moving the head of snake (literally) first
-        // todo i am changing the tail here
         snake_body_node_tmp->data.position = get_future_position(tmp_position, snake_node_tmp->data.snake->direction,
                                                                  1);
         // moving through the linked list
         snake_body_node_tmp = snake_body_node_tmp->next;
         while (snake_body_node_tmp != NULL)
         {
-            Position tmp_tmp_position = snake_body_node_tmp->data.position;
+            const Position tmp_tmp_position = snake_body_node_tmp->data.position;
             snake_body_node_tmp->data.position = tmp_position;
             tmp_position = tmp_tmp_position;
             snake_body_node_tmp = snake_body_node_tmp->next;
         }
-        print_snake(snake_node_tmp->data.snake);
+        // print_snake(snake_node_tmp->data.snake);
         snake_node_tmp = snake_node_tmp->next;
     }
 }
@@ -238,7 +242,11 @@ void render_snake(SDL_Renderer* renderer, const Node* snake_head)
 {
     while (snake_head != NULL)
     {
-        if (snake_head->data.snake->id == -1) continue;
+        if (snake_head->data.snake->id == -1)
+        {
+            snake_head = snake_head->next;
+            continue;
+        }
 
         const Node* snake_body_node_tmp = snake_head->data.snake->body;
         while (snake_body_node_tmp != NULL)
@@ -254,14 +262,18 @@ void render_snake(SDL_Renderer* renderer, const Node* snake_head)
 void eliminate_snack(const Game* game, const int id)
 {
     const Node* snake_node_tmp = game->snake_head;
-    // the -1 for décalage
-    for (int i = 0; i < id - 1; ++i)
+
+    while (snake_node_tmp != NULL)
     {
+        if (snake_node_tmp->data.snake->id == id)
+        {
+            // having an id of -1 means the snake lost
+            snake_node_tmp->data.snake->id = -1;
+            snake_node_tmp->data.snake->body = free_linked_list(snake_node_tmp->data.snake->body);
+            return;
+        }
         snake_node_tmp = snake_node_tmp->next;
     }
-    // having an id of -1 means the snake lost
-    snake_node_tmp->data.snake->id = -1;
-    snake_node_tmp->data.snake->body = free_linked_list(snake_node_tmp->data.snake->body);
 }
 
 // check hitting various objects
@@ -270,7 +282,11 @@ void check_for_hitting_objects(const Game* game)
     const Node* snake_node = game->snake_head;
     while (snake_node != NULL)
     {
-        if (snake_node->data.snake->id == -1) continue;
+        if (snake_node->data.snake->id == -1)
+        {
+            snake_node = snake_node->next;
+            continue;
+        }
         const Position snake_head_position = get_snake_head_position(snake_node->data.snake->body);
         // with borders
         const Node* border_node = game->border_head;
@@ -307,25 +323,39 @@ void check_for_hitting_objects(const Game* game)
             }
         }
 
-        // // With self and other snakes' bodies (tmp_node)
-        // const Node* tmp_node = game->snake_head;
-        // while (tmp_node != NULL)
-        // {
-        //     if (snake_node->data.snake->id == -1) break;
-        //     const Node* tmp_body_node = tmp_node->data.snake->body;
-        //     while (tmp_body_node != NULL)
-        //     {
-        //         if (compare_position(&tmp_body_node->data.position, &snake_head_position))
-        //         {
-        //             eliminate_snack(game, snake_node->data.snake->id);
-        //         }
-        //         else
-        //         {
-        //             tmp_body_node = tmp_body_node->next;
-        //         }
-        //     }
-        //     tmp_node = tmp_node->next;
-        // }
+        // With self and other snakes' bodies (tmp_node)
+        const Node* tmp_node = game->snake_head;
+        while (tmp_node != NULL)
+        {
+            if (snake_node->data.snake->id == -1) break;
+            const Node* tmp_body_node = tmp_node->data.snake->body;
+
+            // check for head/head collision
+            if (snake_node->data.snake->id != tmp_node->data.snake->id)
+            {
+                if (compare_position_by_value(get_snake_head_position(tmp_node->data.snake->body), snake_head_position))
+                {
+                    eliminate_snack(game, snake_node->data.snake->id);
+                    eliminate_snack(game, tmp_node->data.snake->id);
+                    tmp_node = tmp_node->next;
+                    continue;
+                }
+            }
+            tmp_body_node = tmp_body_node->next;
+            while (tmp_body_node != NULL)
+            {
+                if (compare_position(&tmp_body_node->data.position, &snake_head_position))
+                {
+                    eliminate_snack(game, snake_node->data.snake->id);
+                    tmp_body_node = NULL;
+                }
+                else
+                {
+                    tmp_body_node = tmp_body_node->next;
+                }
+            }
+            tmp_node = tmp_node->next;
+        }
         snake_node = snake_node->next;
     }
 }
@@ -337,29 +367,41 @@ void change_snake_direction(const SDL_Event* event, const Game* game)
     switch (event->key.keysym.scancode)
     {
     case SDL_SCANCODE_UP:
-        snake_node->data.snake->direction = UP;
+        // can't go up if going up down
+        if (snake_node->data.snake->direction > 1) snake_node->data.snake->direction = UP;
         break;
     case SDL_SCANCODE_DOWN:
-        snake_node->data.snake->direction = DOWN;
+        if (snake_node->data.snake->direction > 1) snake_node->data.snake->direction = DOWN;
         break;
     case SDL_SCANCODE_LEFT:
-        snake_node->data.snake->direction = LEFT;
+        if (snake_node->data.snake->direction < 2) snake_node->data.snake->direction = LEFT;
         break;
     case SDL_SCANCODE_RIGHT:
-        snake_node->data.snake->direction = RIGHT;
+        if (snake_node->data.snake->direction < 2) snake_node->data.snake->direction = RIGHT;
         break;
     case SDL_SCANCODE_W:
-        snake_node->next->data.snake->direction = UP;
+        if (snake_node->next->data.snake->direction > 1) snake_node->next->data.snake->direction = UP;
         break;
     case SDL_SCANCODE_S:
-        snake_node->next->data.snake->direction = DOWN;
+        if (snake_node->next->data.snake->direction > 1) snake_node->next->data.snake->direction = DOWN;
         break;
     case SDL_SCANCODE_A:
-        snake_node->next->data.snake->direction = LEFT;
+        if (snake_node->next->data.snake->direction < 2) snake_node->next->data.snake->direction = LEFT;
         break;
     case SDL_SCANCODE_D:
-        snake_node->next->data.snake->direction = RIGHT;
+        if (snake_node->next->data.snake->direction < 2) snake_node->next->data.snake->direction = RIGHT;
         break;
     default: break;
     }
+}
+
+bool check_if_all_snakes_lost(const Game* game)
+{
+    const Node* snake_node = game->snake_head;
+    while (snake_node != NULL)
+    {
+        if (snake_node->data.snake->id != -1) return false;
+        snake_node = snake_node->next;
+    }
+    return true;
 }

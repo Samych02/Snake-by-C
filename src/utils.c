@@ -39,6 +39,11 @@ bool compare_position(const Position* a, const Position* b)
     return a->x == b->x && a->y == b->y;
 }
 
+bool compare_position_by_value(const Position a, const Position b)
+{
+    return a.x == b.x && a.y == b.y;
+}
+
 void print_snake(const Snake* snake)
 {
     const Node* tmp = snake->body;

@@ -48,8 +48,6 @@ void render_game(SDL_Renderer* renderer, SDL_Window* window, const Game* game)
     render_borders(renderer, game->border_head);
     render_obstacles(renderer, game->obstacle_head);
     render_snake(renderer, game->snake_head);
-    // print_snake(game->snake[0]);
-
 
     SDL_RenderPresent(renderer);
     SDL_Delay(1000 / 60);

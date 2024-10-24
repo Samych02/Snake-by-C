@@ -18,11 +18,12 @@ int main()
 
     SDL_Window* const window = check_sdl_execution_by_pointer(
         SDL_CreateWindow("Snake", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_LENGTH, SCREEN_LENGTH, 0));
-    SDL_Renderer* const renderer = check_sdl_execution_by_pointer(SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED));
+    SDL_Renderer* const renderer = check_sdl_execution_by_pointer(
+        SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED));
 
     // initiating game
     Game* game = initialize_game(0.3, true, true, 1);
-    while (1)
+    while (!check_if_all_snakes_lost(game))
     {
         SDL_Event event;
         while (SDL_PollEvent(&event))
@@ -40,6 +41,6 @@ int main()
         update_game_state(game);
         render_game(renderer, window, game);
     }
-
+    printf("game over\n");
     return 0;
 }

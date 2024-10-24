@@ -39,7 +39,7 @@ Node* add_borders(Node* border_head)
 void initialize_borders(Game* game)
 {
     Node* border_head = NULL;
-    border_head =  add_borders(border_head);
+    border_head = add_borders(border_head);
     game->border_head = border_head;
 }
 

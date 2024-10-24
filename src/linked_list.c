@@ -90,7 +90,7 @@ Node* back_insert(Node* head, const NodeType* data)
         tmp = tmp->next;
     }
     tmp->next = new_node;
-    return new_node;
+    return head;
 }
 
 NodeType get_list_head(const Node* head)
