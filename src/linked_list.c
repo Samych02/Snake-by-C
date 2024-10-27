@@ -4,34 +4,6 @@
 #include "structure.h"
 #include "utils.h"
 
-// int get_node_snake_list_size(const NodeSnake* snake_list)
-// {
-//     if (snake_list == NULL) int q;
-//     if (snake_list != NULL) int q;
-//     if (snake_list == NULL) return 0;
-//     const NodeSnake* tmp = snake_list;
-//     int size = 0;
-//     while (tmp != NULL)
-//     {
-//         size++;
-//         tmp = tmp->next;
-//     }
-//     return size;
-// }
-//
-// int get_node_position_list_size(const NodePosition* node_position_list)
-// {
-//     if (node_position_list == NULL) return 0;
-//     const NodePosition* tmp = node_position_list;
-//     int size = 0;
-//     while (tmp != NULL)
-//     {
-//         size++;
-//         tmp = tmp->next;
-//     }
-//     return size;
-// }
-
 Node* create_linked_list()
 {
     Node* head = check_memory_allocation(malloc(sizeof(Node)));

@@ -96,6 +96,7 @@ bool validate_generated_starting_position_and_direction(const Game* game, Snake*
                 }
                 snake_body_node_tmp = snake_body_node_tmp->next;
             }
+            snake_body_node_tmp = snake->body;
             border_node_tmp = border_node_tmp->next;
         }
     }
@@ -125,6 +126,7 @@ bool validate_generated_starting_position_and_direction(const Game* game, Snake*
                 }
                 snake_body_node_tmp = snake_body_node_tmp->next;
             }
+            snake_body_node_tmp = snake->body;
             obstacle_node_tmp = obstacle_node_tmp->next;
         }
     }
@@ -144,12 +146,14 @@ bool validate_generated_starting_position_and_direction(const Game* game, Snake*
             {
                 if (
                     compare_position(&existing_snake_body_node_tmp->data.position, &snake_body_node_tmp->data.position)
-                    // ||
-                    // compare_position(existing_snake_body_node_tmp->data.position,
-                    //                  &get_future_position(get_snake_head_position(snake->body), snake->direction, 1))
-                    // ||
-                    // compare_position(existing_snake_body_node_tmp->data.position,
-                    //                  &get_future_position(get_snake_head_position(snake->body), snake->direction, 2))
+                    ||
+                    compare_position_by_value(existing_snake_body_node_tmp->data.position,
+                                              get_future_position(get_snake_head_position(snake->body),
+                                                                  snake->direction, 1))
+                    ||
+                    compare_position_by_value(existing_snake_body_node_tmp->data.position,
+                                              get_future_position(get_snake_head_position(snake->body),
+                                                                  snake->direction, 2))
                 )
                 {
                     snake->body = free_linked_list(snake->body);
@@ -159,6 +163,7 @@ bool validate_generated_starting_position_and_direction(const Game* game, Snake*
             }
             existing_snake_body_node_tmp = existing_snake_body_node_tmp->next;
         }
+        snake_body_node_tmp = snake->body;
         snakes_node_tmp = snakes_node_tmp->next;
     }
     return true;
@@ -181,6 +186,8 @@ void initialize_snakes(Game* game, const Color color, const int id)
     snake->color = color;
     gettimeofday(&snake->old_time, NULL);
     snake->body = NULL;
+    snake->can_change_direction = true;
+    snake->direction_changed = false;
     generate_valid_random_snake_body(game, snake);
 
     NodeType data;
@@ -192,6 +199,12 @@ void initialize_snakes(Game* game, const Color color, const int id)
 // allowing automatic movement for a snake
 bool allow_snake_movement(Snake* snake, const double speed)
 {
+    if (snake->direction_changed)
+    {
+        snake->direction_changed = false;
+        snake->old_time = snake->new_time;
+        return true;
+    }
     gettimeofday(&snake->new_time, NULL);
 
     // Calculating delta time of secs and microseconds
@@ -232,7 +245,8 @@ void move_snakes(const Game* game)
             tmp_position = tmp_tmp_position;
             snake_body_node_tmp = snake_body_node_tmp->next;
         }
-        // print_snake(snake_node_tmp->data.snake);
+        snake_node_tmp->data.snake->can_change_direction = true;
+        print_snake(snake_node_tmp->data.snake);
         snake_node_tmp = snake_node_tmp->next;
     }
 }
@@ -368,28 +382,68 @@ void change_snake_direction(const SDL_Event* event, const Game* game)
     {
     case SDL_SCANCODE_UP:
         // can't go up if going up down
-        if (snake_node->data.snake->direction > 1) snake_node->data.snake->direction = UP;
-        break;
+        if (snake_node->data.snake->direction > 1 && snake_node->data.snake->can_change_direction)
+        {
+            snake_node->data.snake->direction = UP;
+            snake_node->data.snake->direction_changed = true;
+            snake_node->data.snake->can_change_direction = false;
+            break;
+        }
     case SDL_SCANCODE_DOWN:
-        if (snake_node->data.snake->direction > 1) snake_node->data.snake->direction = DOWN;
+        if (snake_node->data.snake->direction > 1 && snake_node->data.snake->can_change_direction)
+        {
+            snake_node->data.snake->direction = DOWN;
+            snake_node->data.snake->direction_changed = true;
+            snake_node->data.snake->can_change_direction = false;
+        }
         break;
     case SDL_SCANCODE_LEFT:
-        if (snake_node->data.snake->direction < 2) snake_node->data.snake->direction = LEFT;
+        if (snake_node->data.snake->direction < 2 && snake_node->data.snake->can_change_direction)
+        {
+            snake_node->data.snake->direction = LEFT;
+            snake_node->data.snake->direction_changed = true;
+            snake_node->data.snake->can_change_direction = false;
+        }
         break;
     case SDL_SCANCODE_RIGHT:
-        if (snake_node->data.snake->direction < 2) snake_node->data.snake->direction = RIGHT;
+        if (snake_node->data.snake->direction < 2 && snake_node->data.snake->can_change_direction)
+        {
+            snake_node->data.snake->direction = RIGHT;
+            snake_node->data.snake->direction_changed = true;
+            snake_node->data.snake->can_change_direction = false;
+        }
         break;
     case SDL_SCANCODE_W:
-        if (snake_node->next->data.snake->direction > 1) snake_node->next->data.snake->direction = UP;
+        if (snake_node->next->data.snake->direction > 1 && snake_node->next->data.snake->can_change_direction)
+        {
+            snake_node->next->data.snake->direction = UP;
+            snake_node->next->data.snake->direction_changed = true;
+            snake_node->next->data.snake->can_change_direction = false;
+        }
         break;
     case SDL_SCANCODE_S:
-        if (snake_node->next->data.snake->direction > 1) snake_node->next->data.snake->direction = DOWN;
+        if (snake_node->next->data.snake->direction > 1 && snake_node->next->data.snake->can_change_direction)
+        {
+            snake_node->next->data.snake->direction = DOWN;
+            snake_node->next->data.snake->direction_changed = true;
+            snake_node->next->data.snake->can_change_direction = false;
+        }
         break;
     case SDL_SCANCODE_A:
-        if (snake_node->next->data.snake->direction < 2) snake_node->next->data.snake->direction = LEFT;
+        if (snake_node->next->data.snake->direction < 2 && snake_node->next->data.snake->can_change_direction)
+        {
+            snake_node->next->data.snake->direction = LEFT;
+            snake_node->next->data.snake->direction_changed = true;
+            snake_node->next->data.snake->can_change_direction = false;
+        }
         break;
     case SDL_SCANCODE_D:
-        if (snake_node->next->data.snake->direction < 2) snake_node->next->data.snake->direction = RIGHT;
+        if (snake_node->next->data.snake->direction < 2 && snake_node->next->data.snake->can_change_direction)
+        {
+            snake_node->next->data.snake->direction = RIGHT;
+            snake_node->next->data.snake->direction_changed = true;
+            snake_node->next->data.snake->can_change_direction = false;
+        }
         break;
     default: break;
     }

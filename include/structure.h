@@ -1,4 +1,6 @@
 #pragma once
+
+#include <stdbool.h>
 #include <sys/_types/_timeval.h>
 
 typedef struct Node Node;
@@ -47,6 +49,10 @@ struct Snake
     struct timeval old_time;
     struct timeval new_time;
     Direction direction;
+    // this is used to synchronize the body movement and keys
+    bool can_change_direction;
+    // to trigger manual movement
+    bool direction_changed;
     // this is useful when growing a snake's body
     Position tail;
     Node* body;

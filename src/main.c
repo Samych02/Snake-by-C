@@ -38,8 +38,10 @@ int main()
             }
             if (event.type == SDL_KEYDOWN) change_snake_direction(&event, game);
         }
-        update_game_state(game);
         render_game(renderer, window, game);
+        update_game_state(game);
+        SDL_Delay(1000 / 60);
+
     }
     printf("game over\n");
     return 0;

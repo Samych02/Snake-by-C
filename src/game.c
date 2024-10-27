@@ -16,8 +16,8 @@ Game* initialize_game(const double speed, const bool border_flag, const bool obs
     game->border_head = NULL;
     game->obstacle_head = NULL;
     game->snake_head = NULL;
-    initialize_borders(game);
-    initialize_obstacles(game);
+    if (border_flag) initialize_borders(game);
+    if (obstacle_flag) initialize_obstacles(game);
     initialize_snakes(game, (Color)SNAKE0_COLOR, 0);
     return game;
 }
@@ -40,9 +40,15 @@ void update_game_state(Game* game)
 void render_game(SDL_Renderer* renderer, SDL_Window* window, const Game* game)
 {
     const Color background_color = BACKGROUND_COLOR;
-    check_sdl_execution_by_code(SDL_SetRenderDrawColor(renderer, background_color.red, background_color.green,
-                                                       background_color.blue,
-                                                       background_color.alpha));
+    check_sdl_execution_by_code(
+        SDL_SetRenderDrawColor(
+            renderer,
+            background_color.red,
+            background_color.green,
+            background_color.blue,
+            background_color.alpha
+        )
+    );
     SDL_RenderClear(renderer);
 
     render_borders(renderer, game->border_head);
@@ -50,5 +56,4 @@ void render_game(SDL_Renderer* renderer, SDL_Window* window, const Game* game)
     render_snake(renderer, game->snake_head);
 
     SDL_RenderPresent(renderer);
-    SDL_Delay(1000 / 60);
 }
