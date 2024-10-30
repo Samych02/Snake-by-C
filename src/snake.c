@@ -202,7 +202,8 @@ bool allow_snake_movement(Snake* snake, const double speed)
     if (snake->direction_changed)
     {
         snake->direction_changed = false;
-        snake->old_time = snake->new_time;
+        // snake->old_time = snake->new_time;
+        gettimeofday(&snake->old_time, NULL);
         return true;
     }
     gettimeofday(&snake->new_time, NULL);
@@ -236,6 +237,10 @@ void move_snakes(const Game* game)
         // Moving the head of snake (literally) first
         snake_body_node_tmp->data.position = get_future_position(tmp_position, snake_node_tmp->data.snake->direction,
                                                                  1);
+        snake_node_tmp->data.snake->can_change_direction = true;
+        gettimeofday(&snake_node_tmp->data.snake->old_time, NULL);
+
+
         // moving through the linked list
         snake_body_node_tmp = snake_body_node_tmp->next;
         while (snake_body_node_tmp != NULL)
@@ -245,7 +250,6 @@ void move_snakes(const Game* game)
             tmp_position = tmp_tmp_position;
             snake_body_node_tmp = snake_body_node_tmp->next;
         }
-        snake_node_tmp->data.snake->can_change_direction = true;
         print_snake(snake_node_tmp->data.snake);
         snake_node_tmp = snake_node_tmp->next;
     }
