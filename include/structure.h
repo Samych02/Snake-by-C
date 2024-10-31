@@ -1,5 +1,6 @@
 #pragma once
 
+#include <SDL_stdinc.h>
 #include <stdbool.h>
 #include <sys/_types/_timeval.h>
 
@@ -46,8 +47,6 @@ struct Snake
 {
     int id;
     Color color;
-    struct timeval old_time;
-    struct timeval new_time;
     Direction direction;
     // this is used to synchronize the body movement and keys
     bool can_change_direction;
@@ -61,7 +60,7 @@ struct Snake
 
 typedef struct
 {
-    double speed;
+    Uint32 speed;
     Position food;
     Node* obstacle_head;
     Node* border_head;

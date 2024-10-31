@@ -34,6 +34,7 @@ void update_game_state(Game* game)
 {
     move_snakes(game);
     check_for_hitting_objects(game);
+    SDL_Delay(game->speed);
 }
 
 // rendering different component of the game
