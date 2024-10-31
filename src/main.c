@@ -22,7 +22,7 @@ int main()
         SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED));
 
     // initiating game
-    Game* game = initialize_game(0.3, true, true, 1);
+    Game* game = initialize_game(250, true, true, 1);
     while (!check_if_all_snakes_lost(game))
     {
         SDL_Event event;
@@ -40,8 +40,6 @@ int main()
         }
         render_game(renderer, window, game);
         update_game_state(game);
-        SDL_Delay(1000 / 60);
-
     }
     printf("game over\n");
     return 0;

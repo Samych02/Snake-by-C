@@ -184,7 +184,7 @@ void initialize_snakes(Game* game, const Color color, const int id)
     Snake* snake = check_memory_allocation(malloc(sizeof(Snake)));
     snake->id = id;
     snake->color = color;
-    gettimeofday(&snake->old_time, NULL);
+    // gettimeofday(&snake->old_time, NULL);
     snake->body = NULL;
     snake->can_change_direction = true;
     snake->direction_changed = false;
@@ -196,28 +196,28 @@ void initialize_snakes(Game* game, const Color color, const int id)
 }
 
 
-// allowing automatic movement for a snake
-bool allow_snake_movement(Snake* snake, const double speed)
-{
-    if (snake->direction_changed)
-    {
-        snake->direction_changed = false;
-        // snake->old_time = snake->new_time;
-        gettimeofday(&snake->old_time, NULL);
-        return true;
-    }
-    gettimeofday(&snake->new_time, NULL);
-
-    // Calculating delta time of secs and microseconds
-    const double time_elapsed = (double)(snake->new_time.tv_sec - snake->old_time.tv_sec)
-        + (double)(snake->new_time.tv_usec - snake->old_time.tv_usec) / 1000000;
-
-
-    if (time_elapsed < speed) return false;
-
-    snake->old_time = snake->new_time;
-    return true;
-}
+// // allowing automatic movement for a snake
+// bool allow_snake_movement(Snake* snake, const double speed)
+// {
+//     if (snake->direction_changed)
+//     {
+//         snake->direction_changed = false;
+//         // snake->old_time = snake->new_time;
+//         gettimeofday(&snake->old_time, NULL);
+//         return true;
+//     }
+//     gettimeofday(&snake->new_time, NULL);
+//
+//     // Calculating delta time of secs and microseconds
+//     const double time_elapsed = (double)(snake->new_time.tv_sec - snake->old_time.tv_sec)
+//         + (double)(snake->new_time.tv_usec - snake->old_time.tv_usec) / 1000000;
+//
+//
+//     if (time_elapsed < speed) return false;
+//
+//     snake->old_time = snake->new_time;
+//     return true;
+// }
 
 // moving snakes
 void move_snakes(const Game* game)
@@ -226,7 +226,7 @@ void move_snakes(const Game* game)
     while (snake_node_tmp != NULL)
     {
         if (snake_node_tmp->data.snake->id == -1) return;
-        if (!allow_snake_movement(snake_node_tmp->data.snake, game->speed)) continue;
+        // if (!allow_snake_movement(snake_node_tmp->data.snake, game->speed)) continue;
 
         // perform movement
         // moving the head first to the new position
@@ -238,7 +238,7 @@ void move_snakes(const Game* game)
         snake_body_node_tmp->data.position = get_future_position(tmp_position, snake_node_tmp->data.snake->direction,
                                                                  1);
         snake_node_tmp->data.snake->can_change_direction = true;
-        gettimeofday(&snake_node_tmp->data.snake->old_time, NULL);
+        // gettimeofday(&snake_node_tmp->data.snake->old_time, NULL);
 
 
         // moving through the linked list
