@@ -327,7 +327,7 @@ void check_for_hitting_objects(const Game* game)
             // check for head/head collision
             if (snake_node->data.snake->id != tmp_node->data.snake->id)
             {
-                if (tmp_node->data.snake->id==-1) continue;
+                if (tmp_node->data.snake->id == -1) continue;
                 if (compare_position_by_value(get_snake_head_position(tmp_node->data.snake->body), snake_head_position))
                 {
                     eliminate_snack(game, snake_node->data.snake->id);
