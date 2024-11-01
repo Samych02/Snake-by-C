@@ -228,7 +228,7 @@ void move_snakes(Game* game)
         }
         // Moving the head of snake (literally) first
         snake_body_node_tmp->data.position = tmp_next_position;
-            snake_node_tmp->data.snake->can_change_direction = true;
+        snake_node_tmp->data.snake->can_change_direction = true;
 
 
         // moving through the linked list
