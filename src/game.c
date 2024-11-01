@@ -6,6 +6,7 @@
 #include "utils.h"
 #include "obstacle.h"
 #include "border.h"
+#include "food.h"
 #include "linked_list.h"
 #include "snake.h"
 
@@ -25,6 +26,7 @@ Game* initialize_game(const Uint32 speed, const bool border_flag, const bool obs
     {
         initialize_snakes(game, snakes_colors[i], i);
     }
+    initialize_food(game);
     return game;
 }
 
@@ -60,6 +62,7 @@ void render_game(SDL_Renderer* renderer, SDL_Window* window, const Game* game)
 
     render_borders(renderer, game->border_head);
     render_obstacles(renderer, game->obstacle_head);
+    render_food(renderer, &game->food);
     render_snake(renderer, game->snake_head);
 
     SDL_RenderPresent(renderer);

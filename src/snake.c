@@ -8,6 +8,7 @@
 #include "constants.h"
 #include "linked_list.h"
 #include "rendering.h"
+#include "food.h"
 #include "structure.h"
 #include "utils.h"
 
@@ -195,7 +196,7 @@ void initialize_snakes(Game* game, const Color color, const int id)
 }
 
 // moving snakes
-void move_snakes(const Game* game)
+void move_snakes(Game* game)
 {
     const Node* snake_node_tmp = game->snake_head;
     while (snake_node_tmp != NULL)
@@ -212,10 +213,22 @@ void move_snakes(const Game* game)
         Node* snake_body_node_tmp = snake_node_tmp->data.snake->body;
         // saving current head position
         Position tmp_position = get_snake_head_position(snake_body_node_tmp);
+        Position tmp_next_position = get_future_position(tmp_position, snake_node_tmp->data.snake->direction, 1);
+
+        // if food is going to be eaten increase snake length by one by replacing food with a new head
+        if (compare_position(&tmp_next_position, &game->food))
+        {
+            NodeType data;
+            data.position = tmp_next_position;
+            snake_node_tmp->data.snake->body = front_insert(snake_body_node_tmp, &data);
+
+            initialize_food(game);
+            snake_node_tmp = snake_node_tmp->next;
+            continue;
+        }
         // Moving the head of snake (literally) first
-        snake_body_node_tmp->data.position = get_future_position(tmp_position, snake_node_tmp->data.snake->direction,
-                                                                 1);
-        snake_node_tmp->data.snake->can_change_direction = true;
+        snake_body_node_tmp->data.position = tmp_next_position;
+            snake_node_tmp->data.snake->can_change_direction = true;
 
 
         // moving through the linked list
@@ -227,7 +240,6 @@ void move_snakes(const Game* game)
             tmp_position = tmp_tmp_position;
             snake_body_node_tmp = snake_body_node_tmp->next;
         }
-        print_snake(snake_node_tmp->data.snake);
         snake_node_tmp = snake_node_tmp->next;
     }
 }
@@ -252,6 +264,7 @@ void render_snake(SDL_Renderer* renderer, const Node* snake_head)
         snake_head = snake_head->next;
     }
 }
+
 // eliminate snake when losing (useful in 2players mode)
 void eliminate_snack(const Game* game, const int id)
 {
