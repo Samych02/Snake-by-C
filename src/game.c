@@ -9,7 +9,7 @@
 #include "linked_list.h"
 #include "snake.h"
 
-Game* initialize_game(const double speed, const bool border_flag, const bool obstacle_flag, const int player_number)
+Game* initialize_game(const Uint32 speed, const bool border_flag, const bool obstacle_flag, const int player_number)
 {
     Game* game = check_memory_allocation(malloc(sizeof(Game)));
     game->speed = speed;
@@ -18,7 +18,13 @@ Game* initialize_game(const double speed, const bool border_flag, const bool obs
     game->snake_head = NULL;
     if (border_flag) initialize_borders(game);
     if (obstacle_flag) initialize_obstacles(game);
-    initialize_snakes(game, (Color)SNAKE0_COLOR, 0);
+
+    const Color snakes_colors[2] = {SNAKE0_COLOR, SNAKE1_COLOR};
+
+    for (int i = 0; i < player_number; i++)
+    {
+        initialize_snakes(game, snakes_colors[i], i);
+    }
     return game;
 }
 

@@ -2,7 +2,6 @@
 
 #include <SDL_stdinc.h>
 #include <stdbool.h>
-#include <sys/_types/_timeval.h>
 
 typedef struct Node Node;
 typedef struct Snake Snake;
@@ -17,10 +16,10 @@ typedef enum
 
 typedef struct
 {
-    int red;
-    int green;
-    int blue;
-    int alpha;
+    uint8_t red;
+    uint8_t green;
+    uint8_t blue;
+    uint8_t alpha;
 } Color;
 
 typedef struct

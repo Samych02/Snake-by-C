@@ -9,6 +9,8 @@
 //
 // Created by SAMY CHERIF on 22/10/2024.
 //
+
+//todo: learn logging
 int main()
 {
     // Seeding random generator
@@ -21,8 +23,9 @@ int main()
     SDL_Renderer* const renderer = check_sdl_execution_by_pointer(
         SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED));
 
+
     // initiating game
-    Game* game = initialize_game(250, true, true, 1);
+    Game* game = initialize_game(250, true, true, 2);
     while (!check_if_all_snakes_lost(game))
     {
         SDL_Event event;

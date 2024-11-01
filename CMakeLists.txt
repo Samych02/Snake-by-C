@@ -14,7 +14,8 @@ add_executable(Snake ${SOURCE_FILES} ${INCLUDE_FILES}
         include/obstacle.h
         include/border.h
         include/snake.h
-        include/game.h)
+        include/game.h
+        src/food.c)
 target_include_directories(Snake PRIVATE include)
 target_link_libraries(Snake
         PRIVATE
