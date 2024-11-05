@@ -43,6 +43,7 @@ int main()
         }
         render_game(renderer, window, game);
         update_game_state(game);
+        SDL_Delay(game->speed);
     }
     printf("game over\n");
     return 0;

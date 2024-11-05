@@ -54,7 +54,7 @@ struct Snake
     // this is useful when growing a snake's body
     Position tail;
     Node* body;
-    int final_score;
+    int score;
 };
 
 typedef struct

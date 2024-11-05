@@ -39,7 +39,7 @@ void initialize_obstacles(Game* game)
 {
     Node* obstacle_head = NULL;
     // here we should define the position of the small plus obstacles
-    const Position small_obstacle_position[] = {{5, 5}, {10, 10}};
+    const Position small_obstacle_position[] = {{4, 4}, {20, 4},{4,20}, {20,20}};
     for (int i = 0; i < sizeof(small_obstacle_position) / sizeof(Position); i++)
         obstacle_head = add_small_plus_obstacle(obstacle_head, &small_obstacle_position[i]);
     game->obstacle_head = obstacle_head;

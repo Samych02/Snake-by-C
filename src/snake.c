@@ -50,7 +50,6 @@ void generate_random_starting_position_and_direction(Snake* snake)
 
     NodeType data;
     data.position = (Position){rand() % BOARD_LENGTH, rand() % BOARD_LENGTH};
-    // data.snake = NULL;
     snake->body = back_insert(snake->body, &data);
 
     const int snake_initial_length = 3;
@@ -59,12 +58,11 @@ void generate_random_starting_position_and_direction(Snake* snake)
     // 0xor1=1
     // 1xor1=0
     // 2xor1=3
-    // 3⊕1=2
+    // 3xor1=2
     for (int i = 1; i < snake_initial_length; i++)
     {
         const Position tmp = get_future_position(get_snake_head_position(snake->body), snake->direction xor 1, i);
         data.position = tmp;
-        // data.snake = NULL;
         snake->body = back_insert(snake->body, &data);
     }
 }
@@ -188,6 +186,7 @@ void initialize_snakes(Game* game, const Color color, const int id)
     snake->body = NULL;
     snake->can_change_direction = true;
     snake->direction_changed = false;
+    snake->score = 0;
     generate_valid_random_snake_body(game, snake);
 
     NodeType data;
@@ -223,6 +222,7 @@ void move_snakes(Game* game)
             snake_node_tmp->data.snake->body = front_insert(snake_body_node_tmp, &data);
 
             initialize_food(game);
+            snake_node_tmp->data.snake->score++;
             snake_node_tmp = snake_node_tmp->next;
             continue;
         }

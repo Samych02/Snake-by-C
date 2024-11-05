@@ -12,7 +12,7 @@ void generate_random_food_position(Game* game)
 
 bool validate_generated_food_position(const Game* game)
 {
-    Position food = game->food;
+    const Position food = game->food;
     // check if the generated position collides with borders or obstacles or snakes
     if (game->border_head != NULL)
     {

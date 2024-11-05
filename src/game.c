@@ -9,6 +9,7 @@
 #include "food.h"
 #include "linked_list.h"
 #include "snake.h"
+#include "score.h"
 
 Game* initialize_game(const Uint32 speed, const bool border_flag, const bool obstacle_flag, const int player_number)
 {
@@ -42,7 +43,6 @@ void update_game_state(Game* game)
 {
     move_snakes(game);
     check_for_hitting_objects(game);
-    SDL_Delay(game->speed);
 }
 
 // rendering different component of the game
@@ -64,6 +64,7 @@ void render_game(SDL_Renderer* renderer, SDL_Window* window, const Game* game)
     render_obstacles(renderer, game->obstacle_head);
     render_food(renderer, &game->food);
     render_snake(renderer, game->snake_head);
+    update_score(window, game);
 
     SDL_RenderPresent(renderer);
 }
