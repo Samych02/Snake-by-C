@@ -13,38 +13,38 @@
 //todo: learn logging
 int main()
 {
-    // Seeding random generator
-    srand(time(0));
+  // Seeding random generator
+  srand(time(0));
 
-    check_sdl_execution_by_code(SDL_Init(SDL_INIT_EVERYTHING));
+  check_sdl_execution_by_code(SDL_Init(SDL_INIT_EVERYTHING));
 
-    SDL_Window* const window = check_sdl_execution_by_pointer(
-        SDL_CreateWindow("Snake", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_LENGTH, SCREEN_LENGTH, 0));
-    SDL_Renderer* const renderer = check_sdl_execution_by_pointer(
-        SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED));
+  SDL_Window* const window = check_sdl_execution_by_pointer(
+    SDL_CreateWindow("Snake", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_LENGTH, SCREEN_LENGTH, 0));
+  SDL_Renderer* const renderer = check_sdl_execution_by_pointer(
+    SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED));
 
 
-    // initiating game
-    Game* game = initialize_game(250, true, true, 2);
-    while (!check_if_all_snakes_lost(game))
+  // initiating game
+  Game* game = initialize_game(250, true, true, 2);
+  while (!check_if_all_snakes_lost(game))
+  {
+    SDL_Event event;
+    while (SDL_PollEvent(&event))
     {
-        SDL_Event event;
-        while (SDL_PollEvent(&event))
-        {
-            if (event.type == SDL_QUIT)
-            {
-                SDL_DestroyRenderer(renderer);
-                SDL_DestroyWindow(window);
-                SDL_Quit();
-                destroy_game(game);
-                exit(0);
-            }
-            if (event.type == SDL_KEYDOWN) change_snake_direction(&event, game);
-        }
-        render_game(renderer, window, game);
-        update_game_state(game);
-        SDL_Delay(game->speed);
+      if (event.type == SDL_QUIT)
+      {
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
+        SDL_Quit();
+        destroy_game(game);
+        exit(0);
+      }
+      if (event.type == SDL_KEYDOWN) change_snake_direction(&event, game);
     }
-    printf("game over\n");
-    return 0;
+    render_game(renderer, window, game);
+    update_game_state(game);
+    SDL_Delay(game->speed);
+  }
+  printf("game over\n");
+  return 0;
 }
