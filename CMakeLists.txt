@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.29)
+cmake_minimum_required(VERSION 3.10)
 project(Snake-by-C C)
 
 set(CMAKE_C_STANDARD 99)
@@ -8,18 +8,11 @@ file(GLOB INCLUDE_FILES include/*.h)
 
 find_package(SDL2 CONFIG REQUIRED)
 
-add_executable(Snake ${SOURCE_FILES} ${INCLUDE_FILES}
-        src/game.c
-        src/game.c
-        include/obstacle.h
-        include/border.h
-        include/snake.h
-        include/game.h
-        src/food.c
-        include/food.h)
+add_executable(Snake ${SOURCE_FILES} ${INCLUDE_FILES})
+
 target_include_directories(Snake PRIVATE include)
 target_link_libraries(Snake
-        PRIVATE
-        $<TARGET_NAME_IF_EXISTS:SDL2::SDL2main>
-        $<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static>
+    PRIVATE
+    $<TARGET_NAME_IF_EXISTS:SDL2::SDL2main>
+    $<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static>
 )
