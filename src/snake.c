@@ -83,7 +83,7 @@ bool validate_generated_starting_position_and_direction(const Game* game, Snake*
           snake->body = free_linked_list(snake->body);
           return false;
         }
-        for (int i = 1; i < 4; ++i)
+        for (int i = 1; i < 6; ++i)
         {
           if (compare_position_by_value(border_node_tmp->data.position,
                                         get_future_position(get_snake_head_position(snake->body), snake->direction, i)))
@@ -113,7 +113,7 @@ bool validate_generated_starting_position_and_direction(const Game* game, Snake*
           snake->body = free_linked_list(snake->body);
           return false;
         }
-        for (int i = 1; i < 4; ++i)
+        for (int i = 1; i < 6; ++i)
         {
           if (compare_position_by_value(obstacle_node_tmp->data.position,
                                         get_future_position(get_snake_head_position(snake->body), snake->direction, i)))
@@ -243,7 +243,6 @@ void move_snakes(Game* game)
   }
 }
 
-// rendering snake
 void render_snake(SDL_Renderer* renderer, const Node* snake_head)
 {
   while (snake_head != NULL)
@@ -255,6 +254,9 @@ void render_snake(SDL_Renderer* renderer, const Node* snake_head)
     }
 
     const Node* snake_body_node_tmp = snake_head->data.snake->body;
+    // rendering the head in a different color to distinguish the head
+    render_square(renderer, &snake_body_node_tmp->data.position, (Color) BLACK_COLOR);
+    snake_body_node_tmp = snake_body_node_tmp->next;
     while (snake_body_node_tmp != NULL)
     {
       render_square(renderer, &snake_body_node_tmp->data.position, snake_head->data.snake->color);
