@@ -11,10 +11,8 @@
 Node* add_small_plus_obstacle(Node* obstacle_head, const Position* position)
 {
   NodeType data;
-  data.snake = NULL;
   data.position.x = position->x;
   data.position.y = position->y;
-  // We do know as a fact that a small obstacle is made from 5 squares
   obstacle_head = front_insert(obstacle_head, &data);
 
   data.position.y--;
@@ -35,13 +33,94 @@ Node* add_small_plus_obstacle(Node* obstacle_head, const Position* position)
   return obstacle_head;
 }
 
+Node* add_big_plus_obstacle(Node* obstacle_head, const Position* position)
+{
+  NodeType data;
+  data.position.x = position->x;
+  data.position.y = position->y;
+
+  obstacle_head = front_insert(obstacle_head, &data);
+
+  data.position.y++;
+  obstacle_head = front_insert(obstacle_head, &data);
+
+  data.position.y++;
+  obstacle_head = front_insert(obstacle_head, &data);
+
+  data.position.y++;
+  obstacle_head = front_insert(obstacle_head, &data);
+
+  data.position.y++;
+  obstacle_head = front_insert(obstacle_head, &data);
+
+  data.position.y++;
+  obstacle_head = front_insert(obstacle_head, &data);
+
+  data.position.x++;
+  obstacle_head = front_insert(obstacle_head, &data);
+
+  data.position.y--;
+  obstacle_head = front_insert(obstacle_head, &data);
+
+  data.position.y--;
+  obstacle_head = front_insert(obstacle_head, &data);
+
+  data.position.y--;
+  obstacle_head = front_insert(obstacle_head, &data);
+
+  data.position.y--;
+  obstacle_head = front_insert(obstacle_head, &data);
+
+  data.position.y--;
+  obstacle_head = front_insert(obstacle_head, &data);
+
+  data.position.y += 2;
+  data.position.x -= 3;
+  obstacle_head = front_insert(obstacle_head, &data);
+
+  data.position.x++;
+  obstacle_head = front_insert(obstacle_head, &data);
+
+  data.position.x++;
+
+  data.position.x++;
+
+  data.position.x++;
+  obstacle_head = front_insert(obstacle_head, &data);
+
+  data.position.x++;
+  obstacle_head = front_insert(obstacle_head, &data);
+
+  data.position.y++;
+  obstacle_head = front_insert(obstacle_head, &data);
+
+  data.position.x--;
+  obstacle_head = front_insert(obstacle_head, &data);
+
+  data.position.x--;
+
+  data.position.x--;
+
+  data.position.x--;
+  obstacle_head = front_insert(obstacle_head, &data);
+
+  data.position.x--;
+  obstacle_head = front_insert(obstacle_head, &data);
+
+  return obstacle_head;
+}
+
 void initialize_obstacles(Game* game)
 {
   Node* obstacle_head = NULL;
   // here we should define the position of the small plus obstacles
-  const Position small_obstacle_position[] = {{4, 4}, {20, 4}, {4, 20}, {20, 20}};
+  const Position small_obstacle_position[] = {{3, 3}, {22, 3}, {3, 22}, {22, 22}};
   for (int i = 0; i < sizeof(small_obstacle_position) / sizeof(Position); i++)
     obstacle_head = add_small_plus_obstacle(obstacle_head, &small_obstacle_position[i]);
+
+  const Position big_obstacle_position[] = {{12, 14},{12, 6}};
+  for (int i = 0; i < sizeof(big_obstacle_position) / sizeof(Position); i++)
+    obstacle_head = add_big_plus_obstacle(obstacle_head, &big_obstacle_position[i]);
   game->obstacle_head = obstacle_head;
 }
 
