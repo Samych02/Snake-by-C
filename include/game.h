@@ -5,11 +5,8 @@
 
 #include "structure.h"
 
-Game* initialize_game(const Uint32 speed, const bool border_flag, const bool obstacle_flag, const int player_number);
-void destroy_game(Game* game);
+Game* initialize_game(const bool set_settings);
 void destroy_game(Game* game);
 void update_game_state(Game* game);
 void render_game(SDL_Renderer* renderer, SDL_Window* window, const Game* game);
-
-
-
+void main_game_loop(SDL_Renderer* renderer, SDL_Window* window, Game* game);

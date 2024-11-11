@@ -19,3 +19,15 @@ void update_score(SDL_Window* window, const Game* game)
   // updating the windows title bar with the new score value
   SDL_SetWindowTitle(window, str);
 }
+
+void print_final_score(const Game* game)
+{
+  printf("Game over!\n");
+  const Node* snake_head = game->snake_head;
+  const int number_of_players = get_list_size(snake_head);
+  for (int i = 0; i < number_of_players; ++i)
+  {
+    printf("Player%d score: %d\n", i + 1, snake_head->data.snake->score);
+    snake_head = snake_head->next;
+  }
+}

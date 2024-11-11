@@ -26,7 +26,7 @@ Position get_future_position(const Position head_position, const Direction direc
   // Ternaries/modulo operator mean when the snake cross the limits, he will come from the other direction
   case UP:
     future_position.x = head_position.x;
-    future_position.y = head_position.y - step <= 0 ? BOARD_LENGTH - step : head_position.y - step;
+    future_position.y = head_position.y - step <= -1 ? BOARD_LENGTH - step : head_position.y - step;
     break;
   case DOWN:
     future_position.x = head_position.x;
@@ -37,7 +37,7 @@ Position get_future_position(const Position head_position, const Direction direc
     future_position.y = head_position.y;
     break;
   case LEFT:
-    future_position.x = head_position.x - step <= 0 ? BOARD_LENGTH - step : head_position.x - step;
+    future_position.x = head_position.x - step <= -1 ? BOARD_LENGTH - step : head_position.x - step;
     future_position.y = head_position.y;
     break;
   }

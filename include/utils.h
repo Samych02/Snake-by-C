@@ -10,3 +10,4 @@ void* check_memory_allocation(void* pointer);
 bool compare_position(const Position* a, const Position* b);
 bool compare_position_by_value(const Position a, const Position b);
 void print_snake(const Snake* snake);
+char get_valid_input(const char* prompt, const char* validChars);

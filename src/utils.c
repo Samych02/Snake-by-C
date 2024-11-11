@@ -58,3 +58,28 @@ void print_snake(const Snake* snake)
   }
   printf("----\n");
 }
+
+char get_valid_input(const char* prompt, const char* validChars)
+{
+  printf("%s", prompt);
+  while (1)
+  {
+    char input[3];
+    // Read input as a string
+    if (fgets(input, sizeof(input), stdin) != NULL)
+    {
+      // Check if the input is exactly one character followed by a newline
+      if (input[1] == '\n' && strchr(validChars, input[0]) != NULL)
+      {
+        return input[0]; // Input is valid if it matches one of the allowed characters
+      }
+      while (getchar() != '\n') {}
+      printf("Invalid option. ");
+      printf("%s", prompt);
+    }
+    else
+    {
+      printf("Error reading input.\n");
+    }
+  }
+}
